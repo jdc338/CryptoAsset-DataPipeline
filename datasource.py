@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 import requests
+import json
 
 if os.path.exists("env.py"):
     import env
@@ -44,20 +45,25 @@ Cleaning and Transforming data using Pandas
 """
 
 
+import json  # Import the json module
+
 def clean_crypto_data(crypto_data):
     crypto_df = pd.DataFrame(crypto_data)
 
     # 1. Handle Missing Values
     crypto_df.dropna(subset=["quote"], inplace=True)
 
-    # 2. Remove Duplicates
-    crypto_df.drop_duplicates(inplace=True)
+    # 2. Convert the 'quote' column to a JSON string
+    crypto_df['quote'] = crypto_df['quote'].apply(lambda x: json.dumps(x))
 
-    # 3. Standardize and Clean Text Data
+    # 4. Convert the 'quote' column back to dictionaries
+    crypto_df['quote'] = crypto_df['quote'].apply(lambda x: json.loads(x))
+
+    # 5. Standardize and Clean Text Data
     crypto_df["name"] = crypto_df["name"].str.strip()
     crypto_df["symbol"] = crypto_df["symbol"].str.upper()
 
-    # 4. Outlier Detection and Handling (removing rows with outlier prices)
+    # 6. Outlier Detection and Handling (removing rows with outlier prices)
     price_upper_limit = (
         crypto_df["quote"].apply(lambda x: x["USD"]["price"]).quantile(0.99)
     )
@@ -65,16 +71,21 @@ def clean_crypto_data(crypto_data):
         crypto_df["quote"].apply(lambda x: x["USD"]["price"]) <= price_upper_limit
     ]
 
-    # 5. Data Validation (removing rows with negative market cap)
+    # 7. Data Validation (removing rows with negative market cap)
     crypto_df = crypto_df[
         crypto_df["quote"].apply(lambda x: x["USD"]["market_cap"]) >= 0
     ]
 
-    # 6. Column Renaming and Reordering
+    # 8. Column Renaming and Reordering
     crypto_df.rename(columns={"name": "asset"}, inplace=True)
     crypto_df = crypto_df[
-        ["symbol", "asset", "quote", "market_cap_usd", "last_updated"]
+        ["symbol", "asset", "quote", "last_updated"]
     ]
+
+    # Extract market_cap_usd from quote
+    crypto_df["market_cap_usd"] = crypto_df["quote"].apply(
+        lambda x: x["USD"]["market_cap"]
+    )
 
     return crypto_df
 
