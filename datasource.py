@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import requests
 import json
+import sqlite3
 
 if os.path.exists("env.py"):
     import env
@@ -12,12 +13,13 @@ COINMARKETCAP_API_KEY = os.environ.get("CMC_API_KEY")
 """
 Retrieving data for the top 30 cryptocurrencies by market cap from the
 CoinMarketCap API.
+WHAT ARE THE PARAMETERS AND WHAT IT RETURNS.... LOOK AT EXAMPLES..
 
 """
 
 
 def retrieve_top_cryptos():
-    top_n_cryptos = 30
+    top_n_cryptos = 500
 
     api_url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 
@@ -41,11 +43,10 @@ def retrieve_top_cryptos():
 
 """
 Cleaning and Transforming data using Pandas
+WHAT ARE THE PARAMETERS AND WHAT IT RETURNS....
 
 """
 
-
-import json  # Import the json module
 
 def clean_crypto_data(crypto_data):
     crypto_df = pd.DataFrame(crypto_data)
@@ -53,17 +54,11 @@ def clean_crypto_data(crypto_data):
     # 1. Handle Missing Values
     crypto_df.dropna(subset=["quote"], inplace=True)
 
-    # 2. Convert the 'quote' column to a JSON string
-    crypto_df['quote'] = crypto_df['quote'].apply(lambda x: json.dumps(x))
-
-    # 4. Convert the 'quote' column back to dictionaries
-    crypto_df['quote'] = crypto_df['quote'].apply(lambda x: json.loads(x))
-
-    # 5. Standardize and Clean Text Data
+    # 2. Standardize and Clean Text Data
     crypto_df["name"] = crypto_df["name"].str.strip()
     crypto_df["symbol"] = crypto_df["symbol"].str.upper()
 
-    # 6. Outlier Detection and Handling (removing rows with outlier prices)
+    # 3. Outlier Detection and Handling (removing rows with outlier prices)
     price_upper_limit = (
         crypto_df["quote"].apply(lambda x: x["USD"]["price"]).quantile(0.99)
     )
@@ -71,16 +66,14 @@ def clean_crypto_data(crypto_data):
         crypto_df["quote"].apply(lambda x: x["USD"]["price"]) <= price_upper_limit
     ]
 
-    # 7. Data Validation (removing rows with negative market cap)
+    # 4. Data Validation (removing rows with negative market cap)
     crypto_df = crypto_df[
         crypto_df["quote"].apply(lambda x: x["USD"]["market_cap"]) >= 0
     ]
 
     # 8. Column Renaming and Reordering
     crypto_df.rename(columns={"name": "asset"}, inplace=True)
-    crypto_df = crypto_df[
-        ["symbol", "asset", "quote", "last_updated"]
-    ]
+    crypto_df = crypto_df[["symbol", "asset", "quote", "last_updated"]]
 
     # Extract market_cap_usd from quote
     crypto_df["market_cap_usd"] = crypto_df["quote"].apply(
@@ -90,8 +83,26 @@ def clean_crypto_data(crypto_data):
     return crypto_df
 
 
+
+def create_and_insert_data(dataframe):
+    # Connect to the SQLite database (or create it if it doesn't exist)
+    conn = sqlite3.connect("crypto_data.db")
+
+    # Serialize the 'quote' column as JSON strings
+    dataframe['quote'] = dataframe['quote'].apply(lambda x: json.dumps(x))
+
+    # Use the DataFrame to_sql method to insert data into the database
+    dataframe.to_sql("cryptocurrencies", conn, if_exists="replace", index=False)
+
+    # Commit and close the connection
+    conn.commit()
+    conn.close()
+
+
 if __name__ == "__main__":
     top_cryptos_data = retrieve_top_cryptos()
     if top_cryptos_data:
         cleaned_crypto_df = clean_crypto_data(top_cryptos_data)
+        # Call the function to insert data into the database
+        create_and_insert_data(cleaned_crypto_df)
         print(cleaned_crypto_df)
