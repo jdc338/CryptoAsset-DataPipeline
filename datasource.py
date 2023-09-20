@@ -19,7 +19,7 @@ WHAT ARE THE PARAMETERS AND WHAT IT RETURNS.... LOOK AT EXAMPLES..
 
 
 def retrieve_top_cryptos():
-    top_n_cryptos = 500
+    top_n_cryptos = 1000
 
     api_url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 
@@ -71,25 +71,31 @@ def clean_crypto_data(crypto_data):
         crypto_df["quote"].apply(lambda x: x["USD"]["market_cap"]) >= 0
     ]
 
-    # 8. Column Renaming and Reordering
+    # 5. Column Renaming and Reordering
     crypto_df.rename(columns={"name": "asset"}, inplace=True)
-    crypto_df = crypto_df[["symbol", "asset", "quote", "last_updated"]]
 
-    # Extract market_cap_usd from quote
-    crypto_df["market_cap_usd"] = crypto_df["quote"].apply(
-        lambda x: x["USD"]["market_cap"]
-    )
+    # 6. Extract specific metrics from 'quote' and create separate columns
+    crypto_df["price_usd"] = crypto_df["quote"].apply(lambda x: x["USD"]["price"])
+    crypto_df["volume_24h_usd"] = crypto_df["quote"].apply(lambda x: x["USD"]["volume_24h"])
+    crypto_df["market_cap_usd"] = crypto_df["quote"].apply(lambda x: x["USD"]["market_cap"])
+    crypto_df["volume_change_24h"] = crypto_df["quote"].apply(lambda x: x["USD"]["volume_change_24h"])
+    crypto_df["percent_change_24h"] = crypto_df["quote"].apply(lambda x: x["USD"]["percent_change_24h"])
+    crypto_df["percent_change_7d"] = crypto_df["quote"].apply(lambda x: x["USD"]["percent_change_7d"])
+
+    # 7. Extract volume_change_24h and percent_change_24h as percentages
+
+    # 8. Reorder columns as needed
+    crypto_df = crypto_df[["symbol", "asset", "market_cap_usd", "price_usd", "percent_change_24h", "percent_change_7d", "volume_24h_usd", "volume_change_24h", "last_updated"]]
 
     return crypto_df
+
+
 
 
 
 def create_and_insert_data(dataframe):
     # Connect to the SQLite database (or create it if it doesn't exist)
     conn = sqlite3.connect("crypto_data.db")
-
-    # Serialize the 'quote' column as JSON strings
-    dataframe['quote'] = dataframe['quote'].apply(lambda x: json.dumps(x))
 
     # Use the DataFrame to_sql method to insert data into the database
     dataframe.to_sql("cryptocurrencies", conn, if_exists="replace", index=False)
