@@ -1,5 +1,7 @@
 requests
 pandas
+sqlite3
+streamlit
+matplotlib
 isort
 black
-sqlite3
