@@ -92,7 +92,6 @@ Matplotlib is used for creating data visualizations, including bar charts for cr
     ```
 
 ## Usage
-    ```
 1. **User Interaction**
 
     ```bash
