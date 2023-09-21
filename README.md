@@ -2,7 +2,7 @@
 
 ## Objective
 
-The objective of this cryptocurrency data analysis application is to gather, clean, and analyze real-time data for the top 1000 cryptocurrencies by market capitalization using the CoinMarketCap API. The project aims to provide valuable insights into cryptocurrency market trends, including price fluctuations, trading volume, and price change percentages over various timeframes. By storing the cleaned data in an SQLite database, the project enables efficient data retrieval and empowers users to interact with the data through an intuitive Streamlit web interface. This project ultimately seeks to facilitate data-driven decision-making in the cryptocurrency space and enhance the understanding of cryptocurrency market dynamics.
+The objective of this cryptocurrency data analysis platform is to gather, clean, and analyze real-time data for the top 1000 cryptocurrencies by market capitalization using the CoinMarketCap API. The project aims to provide valuable insights into cryptocurrency market trends, including price fluctuations, trading volume, and price change percentages over various timeframes. By storing the cleaned data in an SQLite database, the project enables efficient data retrieval and empowers users to interact with the data through an intuitive Streamlit web interface. This project ultimately seeks to facilitate data-driven decision-making in the cryptocurrency space and enhance the understanding of cryptocurrency market dynamics.
 
 ## Features
 
