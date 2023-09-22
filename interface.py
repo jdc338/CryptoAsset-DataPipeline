@@ -88,11 +88,16 @@ for column in columns_to_format:
 st.dataframe(cleaned_crypto_df.iloc[:29])
 
 # Displays 10 most traded assets in bar chart format
-top_10_volume_cryptos = cleaned_crypto_df.sort_values(by='Trading Volume (24hr)', ascending=True).head(10)
+top_10_volume_cryptos = cleaned_crypto_df.sort_values(
+    by='Trading Volume (24hr)', ascending=True).head(10)
+y_axis_labels = [f"{i}M" for i in range(0, 110, 10)]  # Replace with your preferred scale
+
+# Displays 10 most traded assets in bar chart format with custom y-axis labels
 st.header("Most Traded Assets (Last 24hrs)")
 fig1, ax1 = plt.subplots()
 ax1.bar(top_10_volume_cryptos['Token Symbol'],
         top_10_volume_cryptos['Trading Volume (24hr)'])
 ax1.set_xlabel('Token Symbol')
-ax1.set_ylabel('Trading Volume')
+ax1.set_ylabel('Trading Volume (USD)')
+ax1.set_yticklabels(y_axis_labels)  # Set custom y-axis labels
 st.pyplot(fig1)
