@@ -20,7 +20,7 @@ Streamlit is used to create an interactive web interface for querying the crypto
 - [Streamlit Website](https://www.streamlit.io/)
 
 ### Matplotlib
-Matplotlib is used for creating data visualizations, including bar charts for cryptocurrency trading volume.
+Matplotlib is a comprehensive library for creating static, animated, and interactive visualizations in Python.
 
 - [Matplotlib](https://matplotlib.org/stable/users/index.html)
 
