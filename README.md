@@ -4,17 +4,7 @@
 
 The objective of this cryptocurrency data analysis platform is to gather, clean, and analyze real-time data for the top 1000 cryptocurrencies by market capitalization using the CoinMarketCap API. The project aims to provide valuable insights into cryptocurrency market trends, including price fluctuations, trading volume, and price change percentages over various timeframes. By storing the cleaned data in an SQLite database, the project enables efficient data retrieval and empowers users to interact with the data through an intuitive Streamlit web interface. This project ultimately seeks to facilitate data-driven decision-making in the cryptocurrency space and enhance the understanding of cryptocurrency market dynamics.
 
-## Features
-
-- **PDF Document Handling**: Efficiently loads and processes PDFs.
-- **Semantic Text Embeddings**: Transforms processed text into semantic embeddings using OpenAI's language models.
-- **User Interaction**: Streamlit interface for querying the database and receiving information.
-
 ## Technologies Used
-
-### CoinMarketCap API
-The CoinMarketCap API is used to retrieve data for the top 1000 cryptocurrencies by market capitalization, providing various metrics such as price and trading volume.
-
 - [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/)
 - [Streamlit](https://streamlit.io/)
 - [Matplotlib](https://matplotlib.org/stable/users/index.html)
