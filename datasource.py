@@ -23,6 +23,7 @@ def retrieve_top_cryptos():
         The data returned by this function includes various metrics, which can
         be further processed and transformed in other parts of the code.
     """
+
     top_n_cryptos = 1000
 
     api_url = (
