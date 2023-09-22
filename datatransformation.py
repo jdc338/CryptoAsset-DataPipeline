@@ -20,9 +20,10 @@ def clean_crypto_data(crypto_data):
         DataFrame: A cleaned and transformed DataFrame ready for analysis.
 
     Example:
-        To clean and transform cryptocurrency data, you can call the function as follows:
-        cleaned_data = clean_crypto_data(crypto_data)
+        To clean and transform cryptocurrency data, you can call the function as
+        follows: cleaned_data = clean_crypto_data(crypto_data)
     """
+
     crypto_df = pd.DataFrame(crypto_data)
 
     # 1. Handle Missing Values

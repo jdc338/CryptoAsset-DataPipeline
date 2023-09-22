@@ -17,6 +17,7 @@ def create_and_insert_data(dataframe):
     Returns:
         None
     """
+
     conn = sqlite3.connect("crypto_data.db")
     dataframe.to_sql("cryptocurrencies", conn, if_exists="replace", index=False)
     conn.commit()
