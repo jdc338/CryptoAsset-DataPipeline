@@ -102,4 +102,4 @@ Matplotlib is a comprehensive library for creating static, animated, and interac
 - James Corfe [@jdc338](https://github.com/jdc338)
 
 
-**I hope you enjoy the dashboard!**
+**I hope you enjoy using the dashboard!**
