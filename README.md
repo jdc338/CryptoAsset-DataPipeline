@@ -36,7 +36,7 @@ Matplotlib is a comprehensive library for creating static, animated, and interac
 1. Clone the repository.
 
     ```bash
-    git clone git@github.com:jdc338/CryptoAsset-DataPipeline.git
+    git clone git@github.com:jdc338/CryptoAsset-DataPipeline.git 
     ```
 
 2. Navigate into the directory.
